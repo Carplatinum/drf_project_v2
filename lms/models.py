@@ -8,6 +8,9 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'Курс'
+        verbose_name_plural = 'Курсы'
 
 class Lesson(models.Model):
     course = models.ForeignKey(Course, related_name='lessons', on_delete=models.CASCADE)
@@ -18,3 +21,7 @@ class Lesson(models.Model):
 
     def __str__(self):
         return f"{self.title} (Course: {self.course.title})"
+
+    class Meta:
+        verbose_name = 'Урок'
+        verbose_name_plural = 'Уроки'
