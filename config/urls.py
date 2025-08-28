@@ -5,10 +5,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('users.urls')),
-    path('courses/', include('lms.urls')),
+    path('users/', include('users.urls', namespace='users')),
+    path('courses/', include('lms.urls', namespace='lms')),
 ]
 
-# В режиме отладки (DEBUG=True) подключаем обслуживание медиа-файлов из папки media
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
