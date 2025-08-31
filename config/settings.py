@@ -22,9 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django_filters',
     'rest_framework',
-
     'users',
     'lms',
 ]
@@ -112,7 +111,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # REST Framework настройки (простейшие, с беспорядочной авторизацией)
 REST_FRAMEWORK = {
-    # В будущем сюда можно добавить аутентификацию и разрешения
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
