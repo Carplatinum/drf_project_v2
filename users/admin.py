@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User, Payment
 from django.utils.translation import gettext_lazy as _
 
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     ordering = ['email']
@@ -21,6 +22,7 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     filter_horizontal = ('groups', 'user_permissions',)
+
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
