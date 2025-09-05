@@ -5,6 +5,7 @@ from django.conf import settings
 from lms.models import Course, Lesson
 from .managers import CustomUserManager
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('Электронная почта'), unique=True)
     phone = models.CharField(_('Телефон'), max_length=20, blank=True)
@@ -27,6 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
 
 class Payment(models.Model):
     PAYMENT_METHOD_CHOICES = [

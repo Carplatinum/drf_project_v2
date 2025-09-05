@@ -1,8 +1,9 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import Course, Lesson
 from .serializers import CourseSerializer, LessonSerializer
-from users.permissions import IsOwnerOrModeratorOrReadOnly, IsModerator
+from users.permissions import IsOwnerOrModeratorOrReadOnly
 from rest_framework.permissions import IsAuthenticated
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
@@ -28,6 +29,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
 
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()

@@ -3,10 +3,12 @@ from .models import User, Payment
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'phone', 'city', 'avatar']
+
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
@@ -36,6 +38,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
 
 class PaymentSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()

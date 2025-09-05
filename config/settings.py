@@ -9,7 +9,9 @@ load_dotenv(dotenv_path=env_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
+SECRET_KEY = os.getenv(
+    'DJANGO_SECRET_KEY', 'your-default-secret-key'
+)
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 't')
 
@@ -75,20 +77,22 @@ AUTH_USER_MODEL = 'users.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'UserAttributeSimilarityValidator'
+        ),
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -127,6 +131,8 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.tokens.AccessToken',
+    ),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
