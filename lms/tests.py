@@ -34,7 +34,6 @@ class CourseLessonCRUDTests(APITestCase):
         course_data = {'title': 'New Course', 'description': 'Some description'}
         course_response = self.client.post(reverse('lms:course-list'), course_data)
         self.assertEqual(course_response.status_code, 201)
-        course_id = course_response.data['id']
 
         lesson_data = {
             'title': 'Lesson 1',

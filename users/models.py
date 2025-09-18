@@ -42,6 +42,10 @@ class Payment(models.Model):
     paid_lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True, blank=True, related_name='payments')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD_CHOICES)
+    stripe_product_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_price_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
+    payment_status = models.CharField(max_length=50, default='pending')
 
     def __str__(self):
         return f"Payment by {self.user.email} on {self.payment_date.strftime('%Y-%m-%d')}"
