@@ -11,6 +11,8 @@ from .paginators import CourseLessonPagination
 from users.models import Payment
 from .stripe_services import create_product, create_price, create_checkout_session
 
+from .tasks import send_course_update_email
+
 
 class StripePaymentCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -41,9 +43,6 @@ class StripePaymentCreateView(APIView):
 
 
 class CourseViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet для курсов с пагинацией и правами
-    """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     pagination_class = CourseLessonPagination
@@ -60,11 +59,13 @@ class CourseViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def perform_update(self, serializer):
+        course = serializer.save()
+        # Запускаем асинхронную задачу отправки писем подписчикам
+        send_course_update_email.delay(course.id)
+
 
 class LessonViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet для уроков с пагинацией и правами
-    """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     pagination_class = CourseLessonPagination
@@ -83,10 +84,6 @@ class LessonViewSet(viewsets.ModelViewSet):
 
 
 class SubscriptionView(APIView):
-    """
-    APIView для управления подписками пользователей на курсы.
-    При POST запросе подписывает пользователя на курс или удаляет подписку.
-    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
