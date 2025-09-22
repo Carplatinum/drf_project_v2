@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
+from celery.schedules import crontab
 
 # Загрузка переменных окружения из .env
 env_path = Path(__file__).resolve().parent.parent / '.env'
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'drf_yasg',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,24 @@ SPECTACULAR_SETTINGS = {
 }
 
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', REDIS_URL)
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', REDIS_URL)
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = False
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+    'block-inactive-users-every-month': {
+        'task': 'lms.tasks.block_inactive_users',
+        'schedule': crontab(day_of_month='1', hour=3, minute=0),
+    },
+}

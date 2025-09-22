@@ -10,7 +10,6 @@ from users.permissions import IsOwnerOrModeratorOrReadOnly
 from .paginators import CourseLessonPagination
 from users.models import Payment
 from .stripe_services import create_product, create_price, create_checkout_session
-
 from .tasks import send_course_update_email
 
 
@@ -24,9 +23,9 @@ class StripePaymentCreateView(APIView):
         product = create_product(course.title)
         price = create_price(product['id'], course.price)
 
-        domain = 'http://localhost:8000'
-        success_url = f"{domain}/success/"
-        cancel_url = f"{domain}/cancel/"
+        domain = request.get_host()
+        success_url = f"http://{domain}/success/"
+        cancel_url = f"http://{domain}/cancel/"
         session = create_checkout_session(price['id'], success_url, cancel_url)
 
         Payment.objects.create(
@@ -61,7 +60,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         course = serializer.save()
-        # Запускаем асинхронную задачу отправки писем подписчикам
+        # Запускаем асинхронную рассылку подписчикам об обновлении курса
         send_course_update_email.delay(course.id)
 
 
