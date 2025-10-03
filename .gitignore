@@ -60,6 +60,8 @@ media/
 
 # IDEs and editors
 .idea/
+*.iml
+*.iws
 *.swp
 *.swo
 *.sublime-workspace
@@ -72,3 +74,20 @@ media/
 
 # Windows
 Thumbs.db
+
+# Docker
+docker-compose.override.yaml
+postgres_data/
+celerybeat-schedule
+
+# Files with secrets and keys
+*.key
+*.pem
+*.env.*
+
+# Frontend build folder (если есть)
+node_modules/
+
+# Misc
+*.sql
+.pytest_cache/
