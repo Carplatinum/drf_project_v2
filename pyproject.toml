@@ -7,30 +7,29 @@ readme = "README.md"
 packages = [
     { include = "config" },
     { include = "users" },
-    { include = "courses" },
-    { include = "lessons" },
-    { include = "payments" },
+    { include = "lms" },
 ]
+
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.12"
 
-Django = "^4.0"
-djangorestframework = "^3.14"
-django-filter = "^23.0"
-psycopg2-binary = "^2.9"  # PostgreSQL драйвер
-python-dotenv = "^1.0"     # для чтения .env
-celery = "^5.3"
-redis = "^4.3"
+Django = "^5.2"
+djangorestframework = "^3.16"
+django-filter = "^25.1"
+psycopg2-binary = "^2.9"
+python-dotenv = "^1.1"
+celery = "^5.5"
+redis = "^4.6"
 djangorestframework-simplejwt = "^5.5.1"
-drf-spectacular = "^0.28.0"
-drf-yasg = "^1.21.11"
-django-celery-beat = "^2.8.1"
-stripe = "^13.0.1"
-pillow = "^11.3.0"
+drf-spectacular = "^0.28"
+drf-yasg = "^1.21"
+django-celery-beat = "^2.8"
+stripe = "^13.0"
+pillow = "^11.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^23.3"
 flake8 = "^6.0"
 isort = "^6.0"
