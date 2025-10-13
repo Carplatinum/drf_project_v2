@@ -91,7 +91,7 @@ python manage.py runserver
 
 ## 4. Остановка контейнеров
 
-   docker-compose down
+   docker-compose down 
 
 
 ## Лицензия
