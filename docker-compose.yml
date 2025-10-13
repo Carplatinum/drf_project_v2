@@ -1,11 +1,12 @@
+version: '3.8'
+
 services:
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -58,5 +59,15 @@ services:
       - redis
       - db
 
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./html:/usr/share/nginx/html
+    depends_on:
+      - backend
+
 volumes:
-  postgres_data:
+  postgres_data: {}

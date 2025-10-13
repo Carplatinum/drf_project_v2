@@ -1,10 +1,9 @@
-FROM python:3.13-slim
+FROM nginx:latest
 
-WORKDIR /app
+COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY html/ /usr/share/nginx/html/
 
-COPY . .
+EXPOSE 80
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
