@@ -53,12 +53,12 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # сюда можно добавить путь к темплейтам, если надо
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # Важно для drf_spectacular
+                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -74,7 +74,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB', 'drf_project'),
         'USER': os.getenv('POSTGRES_USER', 'drf_user'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', '1234'),
-        'HOST': os.getenv('POSTGRES_HOST', 'db'),
+        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
@@ -142,7 +142,7 @@ SPECTACULAR_SETTINGS = {
 
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
-REDIS_URL = os.getenv('REDIS_URL', 'redis://redis:6379/0')
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', REDIS_URL)
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', REDIS_URL)
