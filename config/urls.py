@@ -29,13 +29,10 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Подключение users с namespace и передачей app_name
+    # namespace указан здесь
     path('users/', include(('users.urls', 'users'), namespace='users')),
-
-    # Подключение lms с namespace и передачей app_name
     path('api/', include(('lms.urls', 'lms'), namespace='lms')),
 
-    # drf-spectacular схемы и UI
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
