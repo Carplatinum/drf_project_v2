@@ -29,10 +29,10 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Подключение users с namespace
+    # Подключение users с namespace и передачей app_name
     path('users/', include(('users.urls', 'users'), namespace='users')),
 
-    # Подключение lms с namespace
+    # Подключение lms с namespace и передачей app_name
     path('api/', include(('lms.urls', 'lms'), namespace='lms')),
 
     # drf-spectacular схемы и UI
