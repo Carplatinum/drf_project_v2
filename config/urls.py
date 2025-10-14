@@ -13,7 +13,6 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-
 schema_view = get_schema_view(
    openapi.Info(
       title="Snippets API",
@@ -26,7 +25,6 @@ schema_view = get_schema_view(
    public=True,
    permission_classes=(permissions.AllowAny,),
 )
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
