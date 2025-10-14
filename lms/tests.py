@@ -12,7 +12,7 @@ class SubscriptionTests(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_add_and_remove_subscription(self):
-        url = reverse('lms:subscription')
+        url = reverse('subscription')
         response = self.client.post(url, {'course_id': self.course.id})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['message'], 'подписка добавлена')
@@ -32,7 +32,7 @@ class CourseLessonCRUDTests(APITestCase):
 
     def test_create_course_and_lesson_with_valid_youtube_url(self):
         course_data = {'title': 'New Course', 'description': 'Some description'}
-        course_response = self.client.post(reverse('lms:course-list'), course_data)
+        course_response = self.client.post(reverse('course-list'), course_data)
         self.assertEqual(course_response.status_code, 201)
         course_id = course_response.data['id']
 
@@ -43,7 +43,7 @@ class CourseLessonCRUDTests(APITestCase):
             'video_url': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
             'course': course_id
         }
-        lesson_response = self.client.post(reverse('lms:lesson-list'), lesson_data)
+        lesson_response = self.client.post(reverse('lesson-list'), lesson_data)
         self.assertEqual(lesson_response.status_code, 201)
 
     def test_create_lesson_invalid_video_url(self):
@@ -53,7 +53,7 @@ class CourseLessonCRUDTests(APITestCase):
             'preview': '',
             'video_url': 'https://vimeo.com/123456'
         }
-        response = self.client.post(reverse('lms:lesson-list'), lesson_data)
+        response = self.client.post(reverse('lesson-list'), lesson_data)
         self.assertEqual(response.status_code, 400)
         self.assertIn('В поле', str(response.data))
 
@@ -68,7 +68,7 @@ class CourseLessonCRUDTests(APITestCase):
             preview=''
         )
         update_data = {'video_url': 'https://youtu.be/abc123'}
-        response = self.client.patch(reverse('lms:lesson-detail', args=[lesson.id]), update_data)
+        response = self.client.patch(reverse('lesson-detail', args=[lesson.id]), update_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['video_url'], update_data['video_url'])
 
@@ -81,7 +81,7 @@ class CourseLessonCRUDTests(APITestCase):
             preview='',
             video_url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
         )
-        course_response = self.client.delete(reverse('lms:course-detail', args=[course.id]))
+        course_response = self.client.delete(reverse('course-detail', args=[course.id]))
         self.assertIn(course_response.status_code, [204, 200])
-        lesson_response = self.client.delete(reverse('lms:lesson-detail', args=[lesson.id]))
+        lesson_response = self.client.delete(reverse('lesson-detail', args=[lesson.id]))
         self.assertIn(lesson_response.status_code, [204, 200])
