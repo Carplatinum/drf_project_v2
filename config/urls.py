@@ -28,8 +28,12 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('users.urls', namespace='users')),
-    path('api/', include('lms.urls', namespace='lms')),
+
+    # Подключение users с namespace
+    path('users/', include(('users.urls', 'users'), namespace='users')),
+
+    # Подключение lms с namespace
+    path('api/', include(('lms.urls', 'lms'), namespace='lms')),
 
     # drf-spectacular схемы и UI
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
