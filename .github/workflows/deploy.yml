@@ -1,0 +1,30 @@
+name: Deploy to Yandex Cloud VM
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.YC_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.YC_SERVER_IP }} >> ~/.ssh/known_hosts
+
+    - name: Deploy application
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.YC_SSH_USER }}@${{ secrets.YC_SERVER_IP }} << 'EOF'
+          cd /path/to/your/project
+          git pull origin develop
+          # Команды деплоя, например:
+          # docker-compose up -d --build
+          # systemctl restart your_service
+        EOF
