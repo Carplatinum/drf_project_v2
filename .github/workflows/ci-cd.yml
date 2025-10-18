@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - develop
-  workflow_dispatch:  # Ручной запуск
+  workflow_dispatch:
 
 jobs:
   test-lint:
@@ -26,19 +26,19 @@ jobs:
       - name: Install Poetry
         uses: abatilo/actions-poetry@v4
 
-      - name: Configure Poetry env
+      - name: Configure Poetry
         run: |
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
 
-      - name: Cache Poetry .venv
+      - name: Cache Poetry virtual environment
         uses: actions/cache@v3
         with:
-          path: ./.venv
-          key: venv-${{ hashFiles('**/poetry.lock') }}
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Install dependencies
-        run: poetry install --no-interaction --no-ansi
+      - name: Install dependencies (with dev)
+        run: poetry install --with dev --no-interaction --no-ansi
 
       - name: Show Poetry environment info
         run: poetry env info
@@ -76,13 +76,13 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            echo "Проверка версии docker-compose на сервере..."
+            echo "Checking docker-compose version on server..."
             if command -v docker-compose &> /dev/null; then
               docker-compose --version
             elif docker compose version &> /dev/null; then
               docker compose version
             else
-              echo "docker-compose не найден!"
+              echo "docker-compose not found!"
               exit 1
             fi
 
