@@ -43,11 +43,15 @@ jobs:
       - name: Show Poetry environment info
         run: poetry env info
 
-      - name: Run linting (flake8)
-        run: poetry run flake8
+      - name: Activate virtualenv and run linting (flake8)
+        run: |
+          source $(poetry env info -p)/bin/activate
+          flake8
 
-      - name: Run tests (pytest)
-        run: poetry run pytest -v
+      - name: Activate virtualenv and run tests (pytest)
+        run: |
+          source $(poetry env info -p)/bin/activate
+          pytest -v
 
   docker-build:
     runs-on: ubuntu-latest
