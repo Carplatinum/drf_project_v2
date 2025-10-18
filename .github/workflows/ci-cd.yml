@@ -3,10 +3,11 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - homework
+      - main
   pull_request:
     branches:
       - develop
+  workflow_dispatch:  # Позволяет запускать workflow вручную из GitHub Actions
 
 jobs:
   test-lint:
