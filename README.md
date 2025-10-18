@@ -91,8 +91,8 @@ python manage.py runserver
 
 ## 4. Остановка контейнеров
 
-   docker-compose down 
-
+   docker-compose down
+   
 ## Сервер 
 Проект доступен по IP: 158.160.204.190
 
