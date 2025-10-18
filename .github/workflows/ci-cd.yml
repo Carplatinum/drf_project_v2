@@ -54,6 +54,24 @@ jobs:
     needs: docker-build
 
     steps:
+      - name: Check docker compose version on server
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            echo "Проверка версии docker-compose на сервере..."
+            if command -v docker-compose &> /dev/null; then
+              docker-compose --version
+            elif docker compose version &> /dev/null; then
+              docker compose version
+            else
+              echo "docker-compose не найден!"
+              exit 1
+            fi
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.9
         with:
@@ -62,7 +80,14 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            cd /path/to/your/project
+            cd ${{ secrets.DEPLOY_DIR }}
             git pull origin develop
-            docker-compose pull
-            docker-compose up -d --build
+            # Попытка использовать modern docker compose (CLI plugin)
+            if docker compose version &> /dev/null; then
+              docker compose pull
+              docker compose up -d --build
+            else
+              # fallback для старых версий
+              docker-compose pull
+              docker-compose up -d --build
+            fi

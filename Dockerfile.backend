@@ -1,0 +1,33 @@
+# Dockerfile.backend
+FROM python:3.13-slim
+
+# Устанавливаем зависимости системы
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем Poetry
+RUN pip install "poetry>=1.8"
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем файловую структуру проекта
+COPY pyproject.toml poetry.lock /app/
+
+# Устанавливаем зависимости проекта
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-root --only main
+
+# Копируем весь исходный код
+COPY . /app/
+
+# Собираем статику Django при сборке образа (по желанию)
+RUN python manage.py collectstatic --noinput
+
+# Открываем порт для приложения
+EXPOSE 8000
+
+# Команда запуска gunicorn
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
