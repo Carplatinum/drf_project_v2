@@ -172,3 +172,5 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(day_of_month='1', hour=3, minute=0),
     },
 }
+
+SWAGGER_USE_COMPAT_RENDERERS = False
