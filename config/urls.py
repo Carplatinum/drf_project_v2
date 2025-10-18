@@ -13,7 +13,6 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-
 schema_view = get_schema_view(
    openapi.Info(
       title="Snippets API",
@@ -27,13 +26,13 @@ schema_view = get_schema_view(
    permission_classes=(permissions.AllowAny,),
 )
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('users.urls', namespace='users')),
-    path('api/', include('lms.urls', namespace='lms')),
 
-    # drf-spectacular схемы и UI
+    # namespace указан здесь
+    path('users/', include(('users.urls', 'users'), namespace='users')),
+    path('api/', include(('lms.urls', 'lms'), namespace='lms')),
+
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),

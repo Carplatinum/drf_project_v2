@@ -6,10 +6,9 @@ from datetime import timedelta
 from celery.schedules import crontab
 
 # Загрузка переменных окружения из .env (корень проекта)
-env_path = Path(__file__).resolve().parent.parent / '.env'
-load_dotenv(dotenv_path=env_path)
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+env_path = BASE_DIR / '.env'
+load_dotenv(dotenv_path=env_path)
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 
@@ -68,16 +67,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'drf_project'),
-        'USER': os.getenv('POSTGRES_USER', 'drf_user'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', '1234'),
-        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+# Определяем хост базы данных и переключение на SQLite для тестов
+POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost')
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'test_db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', 'drf_project'),
+            'USER': os.getenv('POSTGRES_USER', 'drf_user'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', '1234'),
+            'HOST': POSTGRES_HOST,
+            'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        }
+    }
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -162,11 +172,3 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(day_of_month='1', hour=3, minute=0),
     },
 }
-
-if 'test' in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'test_db.sqlite3',
-        }
-    }
