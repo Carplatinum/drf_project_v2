@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - homework
   pull_request:
     branches:
-      - develop
-  workflow_dispatch:
+      - main
 
 jobs:
   test:
@@ -57,10 +55,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Setup Python 3.13
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: '3.10'
 
       - name: Cache pip
         uses: actions/cache@v3
@@ -117,21 +115,16 @@ jobs:
     if: github.ref == 'refs/heads/main' && needs.build.result == 'success'
 
     steps:
-      - name: Set up SSH key
+      - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Deploy to server using Docker Compose
+      - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
-            cd ${{ secrets.DEPLOY_DIR }}
-            git pull origin develop
-            if docker compose version &> /dev/null; then
-              docker compose pull
-              docker compose up -d --build
-            else
-              docker-compose pull
-              docker-compose up -d --build
-            fi
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
